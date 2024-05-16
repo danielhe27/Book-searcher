@@ -24,7 +24,7 @@ authMiddleware: function ({ req }) {
   }
 
   try {
-    const (data) = jwt.verify(token, secret, {
+    const { data } = jwt.verify(token, secret, {
       maxAge: expiration,
     });
   } catch {
