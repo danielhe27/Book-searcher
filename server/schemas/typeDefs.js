@@ -10,14 +10,16 @@ type User {
 }
 
 type Book {
-  _id: ID!
-  title: String!
-  description: String
-  image: String
-  authors: [String]
-  link: String
-  savedBy: User
-}
+    _id: ID!
+    bookId: String!
+    title: String!
+    description: String
+    image: String
+    authors: [String]
+    link: String
+    savedBy: User
+  }
+
 
 type Auth {
   token: String!
