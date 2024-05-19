@@ -10,21 +10,33 @@ const SavedBooks = () => {
   const { loading, data } = useQuery(GET_ME);
   const userData = data?.me || {};
 
-  const [removeBook] = useMutation(REMOVE_BOOK);
+  const [removeBook] = useMutation(REMOVE_BOOK, {
+    update(cache, { data: { removeBook } }) {
+      try {
+        const { me } = cache.readQuery({ query: GET_ME });
+        cache.writeQuery({
+          query: GET_ME,
+          data: { me: { ...me, savedBooks: removeBook.savedBooks } },
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  });
 
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
 
     if (!token) {
+      console.error('No token found, login required.');
       return false;
     }
 
     try {
-      const { data } = await removeBook({
+      await removeBook({
         variables: { bookId },
       });
 
-      const updatedUser = data.removeBook;
       removeBookId(bookId);
     } catch (err) {
       console.error('Error deleting book:', err);
@@ -49,8 +61,8 @@ const SavedBooks = () => {
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks?.map((book) => (
-            <Col md="4" key={book.bookId}>
+          {userData.savedBooks.map((book) => (
+            <Col md="4" key={book._id}>
               <Card border='dark'>
                 {book.image ? (
                   <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
