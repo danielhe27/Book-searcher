@@ -4,14 +4,14 @@ const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
-const { InMemoryLRUCache } = require('apollo-server-caching');
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  cache: new InMemoryLRUCache({ maxSize: 100 * 1024 * 1024, ttl: 3600 }),
+  context: ({ req }) => authMiddleware({ req }),
 });
 
 app.use(express.urlencoded({ extended: false }));
