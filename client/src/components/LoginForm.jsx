@@ -1,21 +1,31 @@
+// importing usestate from react to manage component state
 import { useState } from 'react';
+// importing use mutation from apollo to handle the graphql mutation
 import { useMutation } from '@apollo/client';
 import { Form, Button, Alert } from 'react-bootstrap';
+// importing the login user mutation from the mutation folder
 import { LOGIN_USER } from '../utils/mutations';  
 import Auth from '../utils/auth';
 
+// creating the login form component
 const LoginForm = () => {
+  // creating state for the form fields
   const [userFormData, setUserFormData] = useState({ email: '', password: '' });
+  // creating state for the alert message
   const [validated] = useState(false);
+  // creating state for the alert message
   const [showAlert, setShowAlert] = useState(false);
 
+  // creating a mutation hook to handle the login user mutation
   const [loginUser, { error }] = useMutation(LOGIN_USER);
 
+  // creating a function to handle the change in the form fields
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
 
+  // creating a function to handle the form submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -25,7 +35,7 @@ const LoginForm = () => {
       event.preventDefault();
       event.stopPropagation();
     }
-
+    //try to login the user using the login user mutation
     try {
       const { data } = await loginUser({
         variables: { ...userFormData }
