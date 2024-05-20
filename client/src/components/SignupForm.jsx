@@ -4,18 +4,23 @@ import { useMutation } from '@apollo/client';
 import { ADD_USER } from '../utils/mutations';
 import Auth from '../utils/auth';
 
+//  define the signup form component
 const SignupForm = () => {
+// state for the form data for the new user
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
+  // state for the alert message
   const [validated, setValidated] = useState(false);
+  // state for the alert message
   const [showAlert, setShowAlert] = useState(false);
-
+  // create a mutation hook to handle the add user mutation
   const [addUser] = useMutation(ADD_USER);
 
+  // handle the change in the form fields
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
   };
-
+  // handle the form submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -26,7 +31,7 @@ const SignupForm = () => {
       setValidated(true);
       return;
     }
-
+    // try to signup the user using the add user mutation
     try {
       const { data } = await addUser({
         variables: { ...userFormData },
