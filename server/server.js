@@ -10,7 +10,7 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => authMiddleware({ req }),
+  cache: new InMemoryLRUCache({ maxSize: 100 * 1024 * 1024, ttl: 3600 }),
 });
 
 app.use(express.urlencoded({ extended: false }));
