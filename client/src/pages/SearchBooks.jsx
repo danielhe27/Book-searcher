@@ -6,13 +6,18 @@ import Auth from '../utils/auth';
 import { searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 
+// Define the SearchBooks functional component
 const SearchBooks = () => {
+  // state for the search input
   const [searchedBooks, setSearchedBooks] = useState([]);
+  // state for the search input
   const [searchInput, setSearchInput] = useState('');
+  // state for the saved book ids
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
-
+  // create a mutation hook to handle the save book mutation
   const [saveBook] = useMutation(SAVE_BOOK);
 
+  // handle the change in the search input
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
   }, [savedBookIds]);
@@ -24,6 +29,7 @@ const SearchBooks = () => {
       return false;
     }
 
+    // try to search for books using the Google Books API
     try {
       const response = await searchGoogleBooks(searchInput);
 
@@ -33,6 +39,7 @@ const SearchBooks = () => {
 
       const { items } = await response.json();
 
+      // map over the books data and create an object for each book
       const bookData = items.map((book) => ({
         bookId: book.id,
         authors: book.volumeInfo.authors || ['No author to display'],
