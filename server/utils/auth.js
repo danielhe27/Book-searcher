@@ -1,4 +1,4 @@
-const { AuthenticationError } = require('apollo-server-errors'); 
+const { AuthenticationError } = require('apollo-server-errors');
 const jwt = require('jsonwebtoken');
 
 // Set token secret and expiration date
