@@ -9,15 +9,17 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 const app = express();
+
+// Middleware to parse request body
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => authMiddleware({ req }),
-  persistedQueries: false 
+  persistedQueries: false,
 });
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {
@@ -37,7 +39,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Create a new instance of an Apollo server with the GraphQL schema
+// Function to start Apollo and Express servers
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app });
@@ -50,4 +52,5 @@ const startApolloServer = async (typeDefs, resolvers) => {
   });
 };
 
+// Start the servers
 startApolloServer(typeDefs, resolvers);
