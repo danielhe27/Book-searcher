@@ -16,7 +16,7 @@ app.use(express.json());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: authMiddleware,
+  context: ({ req }) => authMiddleware({ req }),
   persistedQueries: false,
 });
 
@@ -39,7 +39,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Function to start Apollo and Express servers
-const startApolloServer = async () => {
+const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app });
 
@@ -52,4 +52,4 @@ const startApolloServer = async () => {
 };
 
 // Start the servers
-startApolloServer();
+startApolloServer(typeDefs, resolvers);
