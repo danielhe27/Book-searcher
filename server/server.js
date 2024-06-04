@@ -1,6 +1,7 @@
 const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
+const fs = require('fs'); 
 const { authMiddleware } = require('./utils/auth');
 const { typeDefs, resolvers } = require('./schemas');
 const db = require('./config/connection');
@@ -16,7 +17,7 @@ app.use(express.json());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => authMiddleware({ req }),
+  context: authMiddleware,
   persistedQueries: false,
 });
 
@@ -39,7 +40,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Function to start Apollo and Express servers
-const startApolloServer = async (typeDefs, resolvers) => {
+const startApolloServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
 
@@ -52,4 +53,4 @@ const startApolloServer = async (typeDefs, resolvers) => {
 };
 
 // Start the servers
-startApolloServer(typeDefs, resolvers);
+startApolloServer();
