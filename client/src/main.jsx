@@ -11,7 +11,7 @@ import SavedBooks from './pages/SavedBooks';
 
 // Create Http Link
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql',
+  uri: import.meta.env.VITE_GRAPHQL_URL || 'http://localhost:3001/graphql',
 });
 
 // Create Auth Link

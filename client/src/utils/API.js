@@ -55,5 +55,16 @@ export const deleteBook = (bookId, token) => {
 // make a search to google books api
 // https://www.googleapis.com/books/v1/volumes?q=harry+potter
 export const searchGoogleBooks = (query) => {
-  return fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
+  const encodedQuery = encodeURIComponent(query.trim());
+  const apiKey = import.meta.env.VITE_GOOGLE_BOOKS_API_KEY;
+
+  console.log('API KEY PRESENT?', !!apiKey);
+  console.log('API KEY VALUE:', apiKey);
+
+  const baseUrl = `https://www.googleapis.com/books/v1/volumes?q=${encodedQuery}&maxResults=12`;
+  const url = apiKey ? `${baseUrl}&key=${apiKey}` : baseUrl;
+
+  console.log('REQUEST URL:', url);
+
+  return fetch(url);
 };
