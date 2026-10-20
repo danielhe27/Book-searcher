@@ -2,7 +2,9 @@ const { AuthenticationError } = require('apollo-server-errors');
 const jwt = require('jsonwebtoken');
 
 // Set token secret and expiration date
-const secret = 'mysecretsshhhhh';
+// Set JWT_SECRET in server/.env (see .env.example)
+const secret = process.env.JWT_SECRET;
+if (!secret) throw new Error('JWT_SECRET is not set');
 const expiration = '2h';
 
 module.exports = {
