@@ -1,4 +1,4 @@
-const { AuthenticationError } = require('apollo-server-express');
+const { AuthenticationError } = require('../utils/auth');
 const { User } = require('../models');
 const { signToken } = require('../utils/auth');
 
@@ -13,7 +13,7 @@ const resolvers = {
         return userData;
       }
 
-      throw new AuthenticationError('Not logged in');
+      throw AuthenticationError('Not logged in');
     }
   },
   Mutation: {
@@ -28,13 +28,13 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw new AuthenticationError('No user found with this email address');
+        throw AuthenticationError('No user found with this email address');
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+        throw AuthenticationError('Incorrect credentials');
       }
 
       const token = signToken(user);
@@ -50,7 +50,7 @@ const resolvers = {
         ).populate('savedBooks');
         return updatedUser;
       }
-      throw new AuthenticationError('You need to be logged in!');
+      throw AuthenticationError('You need to be logged in!');
     },
     // Resolver for the 'removeBook' mutation to remove a book from the user's list
     removeBook: async (parent, { bookId }, context) => {
@@ -62,7 +62,7 @@ const resolvers = {
         );
         return updatedUser;
       }
-      throw new AuthenticationError('You need to be logged in!');
+      throw AuthenticationError('You need to be logged in!');
     },
   },
 };

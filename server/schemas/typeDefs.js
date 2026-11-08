@@ -1,6 +1,5 @@
-const { gql } = require('apollo-server-express');
-
-const typeDefs = gql`
+// Apollo Server 4 takes the schema as a plain string.
+const typeDefs = `#graphql
   type User {
     _id: ID!
     username: String!

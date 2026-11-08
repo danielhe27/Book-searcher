@@ -1,4 +1,4 @@
-const { AuthenticationError } = require('apollo-server-errors');
+const { GraphQLError } = require('graphql');
 const jwt = require('jsonwebtoken');
 
 // Set token secret and expiration date
@@ -35,5 +35,7 @@ module.exports = {
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
   },
 
-  AuthenticationError: new AuthenticationError('You are not authorized to perform this action'),
+  // Apollo Server 4 replaced AuthenticationError with GraphQLError + an UNAUTHENTICATED code.
+  AuthenticationError: (message = 'You are not authorized to perform this action') =>
+    new GraphQLError(message, { extensions: { code: 'UNAUTHENTICATED' } }),
 };
